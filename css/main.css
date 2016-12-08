@@ -1,0 +1,557 @@
+
+body {
+	margin: 0;
+	padding: 0px;
+	font-size: 10pt;
+	font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Verdana, sans-serif;
+	color: #bbb;
+        background: #303030;
+	font-size: 10pt;	
+ 	overflow-y: hidden;	/* TODO: Remove this tmp hack (not cross browser, will create a wrapper element) */
+}
+
+div {
+	doutline: 1px solid red;
+}
+
+#header {
+	padding: 4px;
+	background: #c44700;
+	background: -moz-linear-gradient(top, #21007F 0%, #130333 54%, #130333 96%); /* firefox */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#21007F), color-stop(54%,#130333), color-stop(96%,#130333)); /* webkit */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#21007F', endColorstr='#130333',GradientType=0 ); /* ie */
+	border-bottom: 2px solid #130333;
+}
+
+#header h1 {
+	margin: 0;
+	padding: 0;
+	font-size: 16pt;
+	color: #fff;
+	text-shadow: 0 0 20px #fefcc9, 10px -10px 30px #feec85, -20px -20px 40px #ffae34, 20px -40px 50px #ec760c, -20px -60px 60px #cd4606, 0 -80px 70px #973716, 10px -90px 80px #451b0e;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+#header .version {
+	position: absolute;
+	top: 12px;
+	right: 15px;
+	font-weight: bold;
+	color: #CFCF7F;
+}
+
+#footer {
+	display: none;
+	text-align: center;
+	clear: both;
+}
+
+#ircLogSearchForm {	
+	margin: 0;
+	padding: 0px;
+}
+
+#ircLogSearchForm select {
+	float: left;	
+	margin-right: 1px;	
+	margin-top: 5px;	
+	color: #aaa;
+	background: #555555;
+	background: -webkit-gradient(linear, left top, left bottom, from(#555555), to(#030303));
+	background: -moz-linear-gradient(top,  #fff,  #ededed);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#555555', endColorstr='#030303');	
+}
+
+#ircLogSearchForm button  {
+	float: left;
+	margin: 0;
+	color: #eee;
+	position: relative;
+	left: -1px;
+	display: inline-block;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;	
+	font-size: 12px;
+	font-weight: bold;
+	-border-top-right-radius: .4em;				
+	-moz-border-radius-topright: .4em;
+	-webkit-border-top-right-radius: .4em;	
+	-border-bottom-right-radius: .4em;				
+	-moz-border-radius-bottomright: .4em;
+	-webkit-border-bottom-right-radius: .4em;		
+	border-width: 1px;
+	border: solid 1px #2B0088;
+	background: #555555;
+	background: -webkit-gradient(linear, left top, left bottom, from(#555555), to(#030303));
+	background: -moz-linear-gradient(top,  #fff,  #ededed);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#555555', endColorstr='#030303');	
+	dheight: 26px;
+	padding: 5px;	
+	dtop: 2px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#ircLogSearchForm button:hover {
+	text-decoration: none;
+	-webkit-box-shadow: 0 0px 0px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 0px 0px rgba(0,0,0,.2);
+	box-shadow: 0 0px 0px rgba(0,0,0,.2);	
+	border: solid 1px #2B0088;
+}
+
+#ircLogSearchForm button:active {
+	position: relative;
+	color: #999;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#fff));
+	background: -moz-linear-gradient(top,  #ededed,  #fff);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#ffffff');
+}
+
+/* Webkit specific rendering tweak (for Safari and Chrome) */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	#ircLogSearchForm button {
+	}	
+}
+
+#ircLogSearchForm input {
+	float: left;
+	width: 150px;
+	color: #444;
+	font-size: 10pt;
+	border: 1px solid #ccc;
+	background: #fff;
+	background: -moz-linear-gradient(top, #eeeeee 0%, #FFFFFF 32%); /* firefox */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(32%,#FFFFFF)); /* webkit */	
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#FFFFFF',GradientType=0 ); /* ie */
+	-border-top-left-radius: .4em;				
+	-moz-border-radius-topleft: .4em;
+	-webkit-border-top-left-radius: .4em;	
+	-border-bottom-left-radius: .4em;				
+	-moz-border-radius-bottomleft: .4em;
+	-webkit-border-bottom-left-radius: .4em;	
+	position: relative;
+	doutline-width: thin;
+	
+	/* I don't normally like disabling outlines, but the only browser / OS
+	   combination that doesn't glitch here is Safari on Mac specifically */
+	outline: none; 
+	padding-top: 4px;
+	padding-bottom: 5px;
+	padding-left: 6px;
+	dmax-height: 20px;	
+}
+
+#searchBox:hover input,
+#searchBox:hover button {
+	border-color: #2B0088;
+}
+
+/* Gecko specific rendering tweak */
+@-moz-document url-prefix() {
+	#ircLogSearchForm input {	
+		padding-top: 6px;
+	}
+}
+
+
+#leftNavigation {
+	font-size: 9pt;
+	position: relative;
+	display: block;
+	width: 240px;
+	doverflow: auto;
+	float: left;		
+	background: #4D4D4D;
+	font-size: 8pt;
+}
+
+#uniform-ircServer,
+#uniform-ircChannel {
+	cursor: default;
+	text-align: left;
+	z-index: 1;
+	position: relative;
+	top: 6px;
+	padding-top: 12px;
+	display: inherit;
+	padding-right: 190px;
+}
+
+#uniform-ircServer span,
+#uniform-ircChannel span {
+	position: absolute;
+	top: 0px;
+	left: 10px;
+}
+
+
+#leftNavigation .conversation, 
+#leftNavigation .conversationSelected {
+	font-family: Arial, Helvetica, sans-serif;
+	position: relative;
+	color: #bbb;
+	padding: 8px;
+	border-bottom: 1px solid #ccc;
+	border-top: 1px solid #fff;
+	background: #151515; 	
+}
+
+
+#leftNavigation .conversation:hover {
+	cursor: pointer;
+	background: #350535;	
+	/*
+	background: -moz-linear-gradient(top, #ffffff 0%, #f3f3f3 50%, #ededed 51%, #ffffff 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(50%,#f3f3f3), color-stop(51%,#ededed), color-stop(100%,#ffffff));
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=0 );
+	*/
+}
+
+#leftNavigation .conversation:hover .ircConversationLabel {
+	color: #888;
+}
+
+#selectChannel {
+	position: relative;
+	overflow: auto;	
+	padding-left: 4px;	
+	padding-bottom: 6px;
+	padding-top: 1px;	
+}
+
+
+#selectChannel label {	
+	float: left;
+	font-weight: bold;
+	background: transparent;
+	z-index: 0;
+	margin-right: 5px;
+	font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Verdana, sans-serif;
+	color: #eee;
+	font-size: 8pt;
+	font-weight: bold;
+	margin-top: 6px;
+	width: 50px;
+	text-align: right;
+	padding-left: 1px;
+	vertical-align: middle;
+}
+
+#search {
+	position: relative;
+	overflow: auto;	
+}
+
+#searchBox {
+	position: relative;
+	overflow: auto;
+	padding-left: 8px;
+	padding-bottom: 8px;
+}
+
+#searchResults {
+	position: relative;
+	overflow: auto;
+	text-align: center;
+	font-size: 10pt;
+	background: #4D4D4D;	
+}
+
+
+#searchResults p {
+	color: #555;
+}
+
+#searchResults .loading {
+	margin-top: 20px;
+	text-shadow: #ddd 0px 1px 0px;	
+}
+
+#searchResults .loading p {
+	padding: 0px;
+	margin-top: 10px;
+}
+
+#leftNavigation .conversation .date {
+	display: block;	
+	font-size: 10pt;
+	padding: 2px;
+	text-align: center;
+	background: #333;
+	color: #aaa;
+	padding-right: 10px;
+	padding-left: 10px;		
+	margin-left: auto;
+	margin-right: auto;	
+	width: 150px;
+	border-radius: 16px;	
+	-moz-border-radius: 16px;
+}
+
+#leftNavigation .conversation:hover .date {
+	background: #555;
+}
+
+#leftNavigation .conversationSelected:hover .date,
+#leftNavigation .conversationSelected .date {
+	background: #181818;
+	color: #fff;
+	font-weight: bold;
+}
+
+#searchResults .dateRow {
+	overflow: visible;
+	margin-bottom: 5px;	
+}
+
+#viewByDate {
+	position: relative;
+	height: 300px;
+}
+
+#leftNavigation .conversationSelected,
+#leftNavigation .conversation {
+	text-align: left;
+	font-size: 9pt;	
+}
+
+#leftNavigation .conversation .selectedArrow {
+	display: none;
+	font-size: 12pt;
+}
+
+#leftNavigation .conversation:hover .selectedArrow {
+	display: block;
+	position: absolute;
+	top: 40%;
+	right: 10px;
+	padding-left: 6px;	
+	padding-top: 2px;
+	width: 15px;
+	height: 20px;
+	overflow: visible;	
+	border-radius: 50px;	
+	-moz-border-radius: 50px;		
+	background: #ddd;
+	color: #fff;
+}
+
+#leftNavigation .conversationSelected:hover .selectedArrow,
+#leftNavigation .conversationSelected .selectedArrow {
+	display: block;
+	position: absolute;
+	top: 40%;
+	right: 10px;
+	padding-left: 6px;
+	padding-top: 2px;	
+	width: 15px;
+	height: 20px;
+	overflow: visible;	
+	border-radius: 50px;	
+	-moz-border-radius: 50px;
+	background: #21007F;	
+	color: #B200FF;		
+}
+
+
+#leftNavigation .conversationSelected,
+#leftNavigation .conversationSelected:hover {
+	border-top: 1px solid #ffb28a;
+	border-bottom: 1px solid #21007F;		
+	background: #130333;
+	background: -moz-linear-gradient(top, #212121 0%, #130333 100%); /* firefox */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#212121), color-stop(100%,#130333)); /* webkit */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#212121', endColorstr='#130333',GradientType=0 ); /* ie */
+	color: #ffdecb;
+}
+
+#leftNavigation .conversationSelected .ircConversationLabel,
+#leftNavigation .conversationSelected:hover .ircConversationLabel {
+	color: #ffb77f;
+}
+
+.ircConversationLabel {
+	float: left;
+	width: 60px;
+	text-align: left;
+	padding-right: 10px;
+	clear: left;
+}
+
+.ircConversationValues {
+	padding-left: 70px;
+}
+
+#ircLogSearchResultsLogView {
+	position: relative;
+	display: block;
+	dleft: 1px;
+	overflow: auto;	
+	background: #f9f9f9;
+	dborder: 1px solid #ddd;	
+	border-left: 1px solid #bbb;	
+}
+
+#leftNavigation .heading,
+#ircLogSearchResultsLogView .heading {
+	font-size: 11pt;
+	padding: 6px;
+	text-align: center;	
+	color: #eee;
+	font-size: 9pt;
+	font-weight: bold;	
+	background: #ddd; 
+	background: -moz-linear-gradient(top, #404040 0%, #303030 100%); /* firefox */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#404040), color-stop(100%,#303030)); /* webkit */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#404040', endColorstr='#303030',GradientType=0 ); /* ie */	
+	font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Verdana, sans-serif;
+	color: #eee;
+	border-bottom: 1px solid #bbb;		
+}
+
+#leftNavigation .heading {
+	border-top: 1px solid #bbb;	
+}
+
+#ircLogSearchResultsLogView div.oddRow,
+#ircLogSearchResultsLogView div.evenRow {
+	font-family: Andale Mono, monospace;
+	font-size: 10pt;
+	width: auto;
+	border-bottom: 1px solid #222;	
+	color: #FFF0D2;
+	padding-left: 4px;
+	padding-top: 2px;
+	padding-bottom: 2px;	
+	overflow: auto;
+}
+
+/* Webkit specific rendering tweak (for Safari and Chrome) */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	#ircLogSearchResultsLogView div.oddRow,
+	#ircLogSearchResultsLogView div.evenRow {
+		font-size: 10pt;
+	}
+}
+
+
+#ircLogSearchResultsLogView div.evenRow {
+	background: #0a0a0a;
+}
+
+#ircLogSearchResultsLogView div.oddRow div,
+#ircLogSearchResultsLogView div.evenRow div {
+	display: inline;
+	float: left;
+}
+
+#ircLogSearchResultsLogView .keyword {
+	background: #8135C2;
+	color: #FFE7B8;
+	font-weight: bold;
+}
+
+#ircLogSearchResultsLogView .time {
+	display: block;
+	width: 50pt;
+	color: #888;
+}
+
+#ircLogSearchResultsLogView .user {
+	display: block;
+	width: 110px;
+	padding-right: 10px;
+	overflow: hidden;
+	text-align: right;
+	color: #bbb;	
+}
+
+#ircLogSearchResultsLogView .systemMsg {
+	color: #888;
+	font-style: italic;
+}
+
+.ircConversationLabel {
+	font-weight: bold;
+	color: #aaa;
+}
+
+.ircConversationParticipant {
+	display: inline;
+    dpadding-left: 2px;
+    dpadding-right: 2px;  
+	color: #888 ;
+	font-weight: bold;
+	dfont-size: 8pt;
+}
+
+.ircConversationKeyword {
+	display: inline;
+	dpadding: 2px;
+    dpadding-left: 5px;
+    dpadding-right: 5px;  
+	color: #59912B;
+	font-weight: bold;
+	dfont-size: 8pt;
+	/*	
+	margin-bottom: 1px;
+	background: #59912B;
+	color: #fff;
+	border-radius: 24px;
+	*/
+}
+
+#leftNavigation .conversationSelected .ircConversationParticipant,
+#leftNavigation .conversationSelected .ircConversationKeyword {
+	color: white;
+}
+
+#ircLogSearchResultsLogViewWrapper {
+	overflow: auto;
+	background: #000;	
+}
+
+#datePicker {
+	width: 200px;
+	height: 170px;
+	margin: auto;
+	margin-top: 12px;
+}
+
+#datePicker .ui-datepicker {
+	display: block;
+}	
+
+#leftNavigationAccordion .ui-accordion-header {
+	font-size: 11pt;
+	text-align: center;	
+	color: #eee;
+	font-size: 9pt;
+	font-weight: bold;	
+	background: #ddd; 
+	background: -moz-linear-gradient(top, #404040 0%, #303030 100%); /* firefox */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#404040), color-stop(100%,#303030)); /* webkit */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#404040', endColorstr='#303030',GradientType=0 ); /* ie */	
+	font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Verdana, sans-serif;
+	border-bottom: 1px solid #bbb;	
+	border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-color: #bbb;	
+	margin: 0px;
+	margin-top: -1px;	
+	border-right: 0px;	
+}
+
+#leftNavigationAccordion .ui-accordion-content {
+	padding: 0px;
+	background: #4D4D4D;
+	border-color: #bbb;
+	border-radius: 0px;
+	-moz-border-radius: 0px;
+	margin-top: -1px;
+	margin-bottom: -0px;
+	border-right: 0px;
+}
