@@ -17,21 +17,8 @@ class GetConversation {
 
 	public $conversation = array();
 	
-	public function __construct($server, $channel, $startTime, $endTime, $keywords) {
+	public function __construct($server, $channel, $startTime, $endTime) {
 				
-                if ($keywords=="undefined")
-                    $keywords = "z8z";
-		// Replace leading/trailing spaces and all multiple spaces with single spaces.
-		$keywords = preg_replace("/( )+/", " ", $keywords);
-		$keywords = preg_replace("/ $/", " ", $keywords);
-		$keywords = preg_replace("/^ /", " ", $keywords);
-
-		// Allow mo more than 10 keywords (to avoid easily overloading server)
-		$keywords = explode(" ", $keywords, 10);
-		
-		// Remove any duplicates (for efficency)
-		$keywords = array_unique($keywords);
-		
 		$startTimeStamp = strtotime($startTime);
 		$endTimeStamp = strtotime($endTime);
 		$date = date('Y-m-d', $startTimeStamp);
@@ -69,13 +56,9 @@ class GetConversation {
 		}
 		closedir($dirHandle);		
 		
-		// TODO: Make these config options
-		$startTimeStamp = $startTimeStamp - (60 * 5); // Show leading 5 minutes
-		$endTimeStamp = $endTimeStamp + (60 * 60); // Show trailing 60 minutes	
-
 		// Min / Max lines (so that even if a channel is really quiet or really busy, responses are useful)
 		$minLines = 25; // Good when people ask questions during the night that are not answered for hours
-		$maxLines = 2000; // TODO: Create UI option so users can load more of a convo if they really want
+		$maxLines = 3000; // TODO: Create UI option so users can load more of a convo if they really want
 
 		$lineCount = 0;
 		$matchingLineCount = 0;		
@@ -96,8 +79,7 @@ class GetConversation {
 			$logLine = null;
 			if ($time && $username) {			
 				$msg = preg_replace("/\n$/", " ", $msg);			
-				$msg = htmlentities($msg);				
-				$msg = $this->highliteKeywords($msg, $keywords);									
+				$msg = htmlentities($msg);											
 				
 				if ($timestamp >= $startTimeStamp) {
 					$logLine = array('line' => $lineCount, 'time' => $time, 'user' => $username, 'msg' => $msg);
@@ -112,7 +94,6 @@ class GetConversation {
 
 				$msg = preg_replace("/\n$/", "", $msg);			
 				$msg = htmlentities($msg);		
-				$msg = $this->highliteKeywords($msg, $keywords);				
 				
 				if ($timestamp >= $startTimeStamp) {
 					$logLine = array('line' => $lineCount, 'time' => $time, 'msg' => $msg);								
@@ -121,12 +102,7 @@ class GetConversation {
 			}
 			
 			if ($logLine !== null)			
-				array_push($this->conversation,$logLine);
-						
-			// Only attempt to exit if we have got at least number of lines in $minLines 
-			if ($matchingLineCount >= $minLines)
-				if ($timestamp > $endTimeStamp)
-					break;
+				array_push($this->conversation,$logLine);						
 			
 			// Exit early if we have hit $maxLines
 			if ($matchingLineCount >= $maxLines)		
@@ -147,6 +123,11 @@ class GetConversation {
 	
 	private function highliteKeywords($line, $keywords) {
 	
+		// Allow mo more than 10 keywords (to avoid easily overloading server)
+		$keywords = explode(" ", $keywords, 10);
+		
+		// Remove any duplicates (for efficency)
+		$keywords = array_unique($keywords);
 									
 		foreach ($keywords as $keyword) {
 			$keyword_escaped = htmlentities(preg_quote($keyword));

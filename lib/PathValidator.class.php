@@ -8,7 +8,7 @@ class PathValidator {
 				
 		// Check base log dir is valid
 		if (!is_dir($baseLogDir))
-			throw new Exception("IRC log directory not valid. Please check config.ini");
+			throw new Exception("IRC log directory ".$baseLogDir." not valid. Please check config.ini");
 		
 		// Check server name is valid (i.e. points to a valid dir)
 		$serverIsValid = false;
@@ -36,7 +36,7 @@ class PathValidator {
 				
 		// Check base log dir is valid
 		if (!is_dir($baseLogDir))
-			throw new Exception("IRC log directory not valid. Please check config.ini");
+			throw new Exception("IRC log directory ".$baseLogDir."  not valid. Please check config.ini");
 		
 		// Validate $server
 		PathValidator::validateServerLogDir($baseLogDir, $server);

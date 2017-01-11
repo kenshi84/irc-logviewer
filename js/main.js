@@ -1,5 +1,7 @@
 
-jQuery(document).ready(function() {			
+var logDates = [];
+
+jQuery(document).ready(function() {
 	jQuery(window).resize(function() {
 		ircLogSearch.redrawWindow();
 	});
@@ -7,12 +9,36 @@ jQuery(document).ready(function() {
 	// Set layout correctly on page load
 	ircLogSearch.redrawWindow();
 
+	jQuery("#datePicker").datepicker({
+		onSelect: function(dateText, inst) {
+			var server = $('#ircServer option:selected').val();
+			var channel = $('#ircChannel option:selected').val();
+			ircLogSearch.getConversation(server, channel, dateText, '00:00', '23:59');
+		},
+		dateFormat: "yy-mm-dd",
+		showButtonPanel: true,
+		firstDay: 1,
+		disabled: true,
+		beforeShowDay: function(date) {
+			ymd = $.datepicker.formatDate('yy-mm-dd', date);
+			if (ymd in logDates) {
+				return [true, "", logDates[ymd]];
+			} else {
+				return [false,"", "None"];
+			}
+		},
+		onChangeMonthYear: function(year, month, inst) {
+			//inst.datepicker('disable');
+			ircLogSearch.updateLogDays( year + "-" + month + "-01" );
+			return true;
+		}
+	});
+
 	// Get list of IRC servers on page load
 	ircLogSearch.populateIrcServerList();
 	
-	jQuery("#datePicker").datepicker();
 	jQuery( "#leftNavigationAccordion" ).accordion({
-		fillSpace: true,
+		fillSpace: false,
 		icons: false	
 	});	
 });
@@ -48,18 +74,38 @@ ircLogSearch.populateIrcServerList = function() {
 		dataType: "json",
 		success: function(result) {
 
-			$("#ircServer").html("");
-			$("#ircChannel").html("");
+			var $select = $("#ircServer");
+			var vSelect = '';
+			$.each(result, function (i, v) {
+                                if (v=="freenode")
+                                    vSelect += '<option value="' + v + '">' + v + '</option>';
+			});
+			$select.html( vSelect );
 
-			for (var i = 0; i < result.length; i++) { 
-				var options = $('#ircServer').attr('options');
-				options[options.length] = new Option(result[i], result[i]);			
-			}	
-		
 			// Calling this method sucessfully always triggers the IRC Channel List to be re-populated too.
 			ircLogSearch.populateIrcChannelList();	
 		}
-		
+
+	});
+}
+
+ircLogSearch.updateLogDays = function(date) {
+	var server = $('#ircServer option:selected').val();
+	var channel = $('#ircChannel option:selected').val();
+
+	jQuery.ajax({
+		url: "ajax/ListMonthLogs.php?timestamp=" + (new Date().getTime().toString())
+			+ "&server=" + encodeURIComponent(server)
+			+ "&channel=" + encodeURIComponent(channel)
+			+ "&date="  + encodeURIComponent(date),
+		type: "GET",
+		dataType: "json",
+		success: function(result) {
+
+			logDates = result;
+			$("#datePicker").datepicker('refresh');
+			$("#datePicker").datepicker('enable');
+		}
 	});
 }
 
@@ -73,12 +119,19 @@ ircLogSearch.populateIrcChannelList = function() {
 		dataType: "json",
 		success: function(result) {
 
-			$("#ircChannel").html("");
-			
-			for (var i = 0; i < result.length; i++) {
-					var options = $('#ircChannel').attr('options');
-					options[options.length] = new Option(result[i], result[i]);			
-			}
+			var $select = $("#ircChannel");
+			var vSelect = '';
+			$.each(result, function (i, v) {
+				vSelect += '<option value="' + v + '">' + v + '</option>';
+			});
+			$select.html( vSelect );
+
+			var date = $("#datePicker").datepicker('getDate');
+			//var day = date.getDate();
+			//var month = date.getMonth()+1;
+			//var year = date.getFullYear();
+
+			ircLogSearch.updateLogDays(date.toString());
 		}
 		
 	});
@@ -93,6 +146,48 @@ ircLogSearch.selectConversation = function(element, server, channel, date, start
 }
 
 
+ircLogSearch.getPlainConversation = function(server, channel, date, startTime, endTime) {
+	jQuery('#ircLogSearchResultsLogViewWrapper').html('');	
+	
+	$.ajax({		
+		url: "ajax/GetPlainConversation.php?timestamp=" + (new Date().getTime().toString()) + "&server=" + encodeURIComponent(server) + "&channel=" + encodeURIComponent(channel) + "&startTime="  + date + "+" + encodeURIComponent(startTime)+ "&endTime=" + date + "+" + encodeURIComponent(endTime),
+		type: "GET",
+		dataType: "json",
+		success: function(json) {
+
+			jQuery('#ircLogSearchResultsLogView').html('<div class="heading">Chat Log - ' + channel + ' - ' + date + '</div>'
+                                                      +'<div id="ircLogSearchResultsLogViewWrapper"></div>');		
+			ircLogSearch.redrawWindow();
+		
+			var rowClass = "oddRow";
+			for (var i = 0; i < json['conversation'].length; i++) {
+				
+				if (json['conversation'][i].user) {
+					jQuery('#ircLogSearchResultsLogViewWrapper').append(	'<div class="' + rowClass + '">'							
+																			+'<div class="time">' + json['conversation'][i].time + '</div>'
+																			+'<div class="user">&lt;' + highlightName(json['conversation'][i].user) + '&gt;</div>'
+																			+'<span class="msg">' + json['conversation'][i].msg + '</span>'
+																			+'</div>'
+																		);
+				} else {
+					jQuery('#ircLogSearchResultsLogViewWrapper').append(	'<div class="' + rowClass + '">'							
+																			+'<div class="time">' + json['conversation'][i].time + '</div>'
+																			+'<span class="systemMsg">' + json['conversation'][i].msg + '</span>'
+																			+'</div>'
+																		);
+				}
+																	
+				(rowClass == "oddRow") ? rowClass = "evenRow" : rowClass = "oddRow";									
+
+			}		
+		}
+		
+	});
+	
+	ircLogSearch.redrawWindow();
+				
+	return;	
+}
 ircLogSearch.getConversation = function(server, channel, date, startTime, endTime, keywords) {
 
 	jQuery('#ircLogSearchResultsLogViewWrapper').html('');	
@@ -146,9 +241,9 @@ ircLogSearch.search = function() {
 	// Todo: Impliment href query string, so URL's of results can be copy/pasted
 	//window.location.href = "#q=search&server="+encodeURIComponent(server) + "&channel=" + encodeURIComponent(channel) + "&keywords=" + encodeURIComponent(keywords);
 	
-	if (keywords == "")
-		return;		
+	if (keywords == ""){
 
+	}
 	// Show search results accordion
 	$( "#leftNavigationAccordion" ).accordion("option", "active", 1);
 	

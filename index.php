@@ -1,7 +1,7 @@
 <?php
 	// Version string in URLs is used to prevent unwanted caching of JS and CSS files following upgrades.
 	// As a side effect, also causes browsers to more aggressively cache as long as it remains unchanged.
-	$version = "0.24b";
+	$version = "1.0b";
 	$searchKeywords = '';
 	
 	if (!file_exists(dirname(__FILE__).'/lib/config.ini'))
@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>FireBreath IRC Log Viewer</title>		
+		<title>FireBreath IRC Log Viewer Plus</title>		
 		<link rel="stylesheet" href="css/jquery-ui.css?v=<?php echo $version ?>" />
 		<link rel="stylesheet" href="css/main.css?v=<?php echo $version ?>" />		
 		<script type="text/javascript" src="http://www.google.com/jsapi?autoload=%7B%22modules%22%3A%5B%7Bname%3A%22maps%22%2Cversion%3A3%2Cother_params%3A%22sensor%3Dfalse%22%7D%2C%7B%22name%22%3A%22jquery%22%2C%22version%22%3A%221.3.2%22%7D%2C%7B%22name%22%3A%22jqueryui%22%2C%22version%22%3A%221.7.2%22%7D%5D%7D"></script>		
@@ -34,13 +34,15 @@
 		<!-- Search Results -->
 			<div id="leftNavigation">
 				<!-- Select Server / Channel -->
-				<div id="selectChannel">					
+				<div id="selectServer">
 					<label for="ircServer">Server:</label>
-					<select id="ircServer" name="server" onchange="ircLogSearch.populateIrcChannelList();"></select>	
+					<select id="ircServer" name="server" onchange="ircLogSearch.populateIrcChannelList();"></select>
+				</div>
+				<div id="selectChannel">
 					<label for="ircChannel">Channel:</label>
-					<select id="ircChannel" name="channel"></select>				
-				</div>							
-				
+					<select id="ircChannel" name="channel"></select>
+				</div>
+
 				<!-- Search Input -->
 				<div id="search">
 					<div id="searchBox">
@@ -52,7 +54,7 @@
 				<div id="leftNavigationAccordion">
 					<h3><a href="#">Browse Logs</a></h3>
 					<div>
-								
+						<div id="datePicker"></div>
 					</div>
 					<h3><a href="#">Search Results</a></h3>
 					<div>
