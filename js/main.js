@@ -74,13 +74,13 @@ ircLogSearch.populateIrcServerList = function() {
 		dataType: "json",
 		success: function(result) {
 
-			var $select = $("#ircServer");
-			var vSelect = '';
-			$.each(result, function (i, v) {
-                                if (v=="freenode")
-                                    vSelect += '<option value="' + v + '">' + v + '</option>';
-			});
-			$select.html( vSelect );
+			$("#ircServer").html("");
+			$("#ircChannel").html("");
+
+			for (var i = 0; i < result.length; i++) { 
+				var options = $('#ircServer').attr('options');
+				options[options.length] = new Option(result[i], result[i]);			
+			}	
 
 			// Calling this method sucessfully always triggers the IRC Channel List to be re-populated too.
 			ircLogSearch.populateIrcChannelList();	
